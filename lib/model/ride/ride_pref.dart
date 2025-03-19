@@ -23,4 +23,27 @@ class RidePreference {
         'arrival: ${arrival.name}, '
         'requestedSeats: $requestedSeats)';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! RidePreference) return false;
+
+    bool sameDay;
+    DateTime now = DateTime.now();
+
+    if (departureDate.isBefore(now) && other.departureDate.isBefore(now)) {
+      // Consider past ride preferences as today
+      sameDay = true;
+    } else {
+      sameDay = departureDate == other.departureDate;
+    }
+
+    // Requested seats are not checked because the actual app acts like so.
+    return other.arrival == arrival && other.departure == departure && sameDay;
+  }
+
+  @override
+  int get hashCode =>
+      arrival.hashCode ^ departure.hashCode ^ departureDate.hashCode;
 }
