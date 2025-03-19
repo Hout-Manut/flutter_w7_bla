@@ -14,7 +14,7 @@ class RidePreferencesProvider extends ChangeNotifier{
 
   RidePreference? get currentPreference => _currentPreference;
 
-  List<RidePreference> get preferencesHistory => _pastPreferences;
+  List<RidePreference> get pastPreferences => _pastPreferences;
 
   void setCurrentPreference (RidePreference newPreference) {
     // Returns if the new preference is the same as the current one
