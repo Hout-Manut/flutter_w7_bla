@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import '../model/ride/ride_pref.dart';
 import '../repository/ride_preferences_repository.dart';
 
@@ -6,6 +8,7 @@ import '../repository/ride_preferences_repository.dart';
 ///   - The past ride preferences
 ///   - The currennt ride preferences
 ///
+@Deprecated('To be removed, use provider instead')
 class RidePrefService {
   // Static private instance
   static RidePrefService? _instance;
