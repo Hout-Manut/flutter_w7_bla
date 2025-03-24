@@ -1,4 +1,4 @@
-import '../../model/ride/ride_pref.dart';
+import '../../../model/ride/ride_pref.dart';
 import '../ride_preferences_repository.dart';
 
 import '../../dummy_data/dummy_data.dart';
@@ -18,7 +18,10 @@ class MockRidePreferencesRepository extends RidePreferencesRepository {
   Future<void> addPreference(RidePreference preference) {
     return Future.delayed(
       const Duration(seconds: 2),
-      () => _pastPreferences.add(preference),
+      () {
+        _pastPreferences.remove(preference);
+        _pastPreferences.add(preference);
+      },
     );
   }
 }
