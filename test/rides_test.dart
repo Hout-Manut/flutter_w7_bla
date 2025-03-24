@@ -1,7 +1,7 @@
 import 'package:week_7_bla/model/location/locations.dart';
 import 'package:week_7_bla/model/ride/ride.dart';
 import 'package:week_7_bla/model/ride/ride_pref.dart';
-import 'package:week_7_bla/repository/mock/mock_rides_repository.dart';
+import 'package:week_7_bla/data/repository/mock/mock_rides_repository.dart';
 import 'package:week_7_bla/service/rides_service.dart';
 
 void main() {

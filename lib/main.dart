@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:week_7_bla/providers/ride_preferences_provider.dart';
-import 'repository/mock/mock_locations_repository.dart';
-import 'repository/mock/mock_rides_repository.dart';
+import 'package:week_7_bla/data/repository/local/local_ride_preferences_repository.dart';
+import 'package:week_7_bla/ui/providers/ride_preferences_provider.dart';
+import 'data/repository/mock/mock_locations_repository.dart';
+import 'data/repository/mock/mock_rides_repository.dart';
 import 'service/locations_service.dart';
 import 'service/rides_service.dart';
 
-import 'repository/mock/mock_ride_preferences_repository.dart';
+import 'data/repository/mock/mock_ride_preferences_repository.dart';
 import 'ui/screens/ride_pref/ride_pref_screen.dart';
 import 'ui/theme/theme.dart';
 
@@ -20,7 +21,7 @@ void main() {
     providers: [
       ChangeNotifierProvider(
         create: (context) =>
-            RidePreferencesProvider(MockRidePreferencesRepository()),
+            RidePreferencesProvider(LocalRidePreferencesRepository()),
       )
     ],
     child: MyApp(),
