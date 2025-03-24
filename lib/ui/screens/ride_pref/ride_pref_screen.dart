@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:week_7_bla/providers/async_value_provider.dart';
 import 'package:week_7_bla/providers/ride_preferences_provider.dart';
+import 'package:week_7_bla/ui/widgets/display/bla_error.dart';
 
 import '../../../model/ride/ride_pref.dart';
 import '../../theme/theme.dart';
@@ -32,14 +34,46 @@ class RidePrefScreen extends StatelessWidget {
         .push(AnimationUtils.createBottomToTopRoute(RidesScreen()));
   }
 
+  Widget _buildPastPrefsList(BuildContext context) {
+    RidePreferencesProvider ridePrefsProvider =
+        context.read<RidePreferencesProvider>();
+    AsyncValue<List<RidePreference>> value = ridePrefsProvider.pastPreferences;
+    switch (value.state) {
+      case AsyncValueState.loading:
+        return BlaError(
+          'Loading...',
+          level: BlaErrorLevel.info,
+        );
+      case AsyncValueState.error:
+        return BlaError('Error fetching past ride preferences',
+            level: BlaErrorLevel.error);
+      case AsyncValueState.success:
+        return SizedBox(
+          height: 200,
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: AlwaysScrollableScrollPhysics(),
+            itemCount: value.data!.length,
+            itemBuilder: (ctx, index) => RidePrefHistoryTile(
+              ridePref: value.data![index],
+              onPressed: () => onRidePrefSelected(context, value.data![index]),
+            ),
+          ),
+        );
+      case AsyncValueState.empty:
+        return BlaError(
+          'No past ride preferences.',
+          level: BlaErrorLevel.info,
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     RidePreferencesProvider ridePrefsProvider =
         context.watch<RidePreferencesProvider>();
 
     RidePreference? currentRidePreference = ridePrefsProvider.currentPreference;
-    List<RidePreference> pastPreferences = ridePrefsProvider.pastPreferences;
-
     return Stack(
       children: [
         // 1 - Background  Image
@@ -72,19 +106,7 @@ class RidePrefScreen extends StatelessWidget {
                   SizedBox(height: BlaSpacings.m),
 
                   // 2.2 Optionally display a list of past preferences
-                  SizedBox(
-                    height: 200, // Set a fixed height
-                    child: ListView.builder(
-                      shrinkWrap: true, // Fix ListView height issue
-                      physics: AlwaysScrollableScrollPhysics(),
-                      itemCount: pastPreferences.length,
-                      itemBuilder: (ctx, index) => RidePrefHistoryTile(
-                        ridePref: pastPreferences[index],
-                        onPressed: () =>
-                            onRidePrefSelected(context, pastPreferences[index]),
-                      ),
-                    ),
-                  ),
+                  _buildPastPrefsList(context),
                 ],
               ),
             ),
