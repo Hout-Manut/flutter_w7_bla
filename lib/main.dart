@@ -16,10 +16,14 @@ void main() {
   RidesService.initialize(MockRidesRepository());
 
   // 2- Run the UI
-  runApp(ChangeNotifierProvider(
-    create: (context) =>
-        RidePreferencesProvider(MockRidePreferencesRepository()),
-    child: const MyApp(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) =>
+            RidePreferencesProvider(MockRidePreferencesRepository()),
+      )
+    ],
+    child: MyApp(),
   ));
 }
 
