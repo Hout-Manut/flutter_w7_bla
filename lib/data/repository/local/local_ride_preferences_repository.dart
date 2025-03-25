@@ -8,28 +8,12 @@ import 'package:week_7_bla/model/ride/ride_pref.dart';
 class LocalRidePreferencesRepository extends RidePreferencesRepository {
   static const String _preferenceKey = 'ride_preferences';
 
-  List<RidePreference> _pastPreferencesCache = [];
-
-  LocalRidePreferencesRepository() {
-    _loadLocalPastPreferences();
-  }
-
-  void _loadLocalPastPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    List<String> data = prefs.getStringList(_preferenceKey) ?? [];
-
-    _pastPreferencesCache = data
-        .map((json) => RidePreferenceDto.fromJson(jsonDecode(json)))
-        .toList();
-  }
-
   @override
   Future<void> addPreference(RidePreference preference) async {
-    _pastPreferencesCache.remove(preference);
-    _pastPreferencesCache.insert(0, preference);
-    List<String> json = _pastPreferencesCache
-        .map((pref) => jsonEncode(RidePreferenceDto.toJson(pref)))
+    List<RidePreference> pastPrefs = await getPastPreferences();
+    pastPrefs.remove(preference);
+    pastPrefs.add(preference);
+    List<String> json = pastPrefs.map((pref) => jsonEncode(RidePreferenceDto.toJson(pref)))
         .toList();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -38,6 +22,12 @@ class LocalRidePreferencesRepository extends RidePreferencesRepository {
 
   @override
   Future<List<RidePreference>> getPastPreferences() async {
-    return _pastPreferencesCache;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String> data = prefs.getStringList(_preferenceKey) ?? [];
+
+    return data
+        .map((json) => RidePreferenceDto.fromJson(jsonDecode(json)))
+        .toList();
   }
 }
